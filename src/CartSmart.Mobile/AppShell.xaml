@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:CartSmart.Mobile.Views"
+       x:Class="CartSmart.Mobile.AppShell">
+
+    <!--
+      Section 5.1 (Onboarding/Auth) and Sections 5.3-5.6 (Suggestions, Notifications, Shopping
+      Mode, Settings/Sync) are out of scope for this pass — see Services/I*.cs stubs. Lists is
+      the only fully-implemented vertical slice (Section 5.2), so it's the app's entry point here.
+    -->
+    <ShellContent Title="My Lists"
+                  ContentTemplate="{DataTemplate views:ListsPage}"
+                  Route="ListsPage" />
+
+</Shell>

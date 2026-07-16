@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CartSmart.Mobile/CartSmart.Mobile.csproj" />
+  </Folder>
+</Solution>
