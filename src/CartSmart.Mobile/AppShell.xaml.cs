@@ -27,7 +27,13 @@ public partial class AppShell : Shell
 
     private void OnShellNavigated(object? sender, ShellNavigatedEventArgs e)
     {
-        var segments = Current.CurrentState.Location.OriginalString.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var location = e.Current?.Location;
+        if (location is null)
+        {
+            return;
+        }
+
+        var segments = location.OriginalString.Split('/', StringSplitOptions.RemoveEmptyEntries);
         if (segments.Length > 0)
         {
             _viewModel.CurrentRoute = segments[0];
