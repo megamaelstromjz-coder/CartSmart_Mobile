@@ -6,135 +6,141 @@
              x:DataType="vm:HistoryViewModel"
              Title="History">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16">
+    <!--
+      CollectionView does its own virtualized scrolling — nesting it inside a ScrollView is a
+      documented MAUI hang/crash trap. Everything above the list lives in CollectionView.Header
+      instead, so the CollectionView itself is the page's only scrollable element.
+    -->
+    <CollectionView ItemsSource="{Binding Items}" SelectionMode="None" Margin="20">
+        <CollectionView.Header>
+            <VerticalStackLayout Spacing="16" Margin="0,0,0,16">
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="📦 Purchase History" Style="{StaticResource SectionTitleLabel}" />
-                <Label Text="Your on-device purchase patterns used to power predictions."
-                       Style="{StaticResource SubtitleLabel}" />
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="📦 Purchase History" Style="{StaticResource SectionTitleLabel}" />
+                    <Label Text="Your on-device purchase patterns used to power predictions."
+                           Style="{StaticResource SubtitleLabel}" />
+                </VerticalStackLayout>
+
+                <Border Style="{StaticResource InfoBanner}"
+                        IsVisible="{Binding ColdStartCount, Converter={StaticResource CountToBoolConverter}}">
+                    <Label TextColor="{StaticResource TextPrimary}" FontSize="14">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding ColdStartCount}" FontAttributes="Bold" />
+                                <Span Text=" item(s) need more purchase history before predictions become reliable." />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                    <Border Grid.Column="0" Style="{StaticResource StatCardBorder}" Padding="10,16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding TrackedCount}" Style="{StaticResource StatNumberLabel}" FontSize="24" />
+                            <Label Text="Tracked items" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource StatCardBorder}" Padding="10,16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding HighConfidenceCount}" Style="{StaticResource StatNumberLabel}" FontSize="24" TextColor="{StaticResource ConfidenceHigh}" />
+                            <Label Text="High confidence" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource StatCardBorder}" Padding="10,16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding BuildingDataCount}" Style="{StaticResource StatNumberLabel}" FontSize="24" TextColor="{StaticResource StatusDueSoon}" />
+                            <Label Text="Building data" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="3" Style="{StaticResource StatCardBorder}" Padding="10,16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding ColdStartCount}" Style="{StaticResource StatNumberLabel}" FontSize="24" TextColor="{StaticResource TextMuted}" />
+                            <Label Text="Cold start" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border Style="{StaticResource CardBorder}" Padding="14,10">
+                    <Entry Placeholder="Search tracked items..." Text="{Binding SearchText}" Style="{StaticResource SearchEntry}" />
+                </Border>
+
             </VerticalStackLayout>
+        </CollectionView.Header>
 
-            <Border Style="{StaticResource InfoBanner}"
-                    IsVisible="{Binding ColdStartCount, Converter={StaticResource CountToBoolConverter}}">
-                <Label TextColor="{StaticResource TextPrimary}" FontSize="14">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding ColdStartCount}" FontAttributes="Bold" />
-                            <Span Text=" item(s) need more purchase history before predictions become reliable." />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-            </Border>
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+        </CollectionView.ItemsLayout>
 
-            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
-                <Border Grid.Column="0" Style="{StaticResource StatCardBorder}" Padding="10,16">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="{Binding TrackedCount}" Style="{StaticResource StatNumberLabel}" FontSize="24" />
-                        <Label Text="Tracked items" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="1" Style="{StaticResource StatCardBorder}" Padding="10,16">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="{Binding HighConfidenceCount}" Style="{StaticResource StatNumberLabel}" FontSize="24" TextColor="{StaticResource ConfidenceHigh}" />
-                        <Label Text="High confidence" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="2" Style="{StaticResource StatCardBorder}" Padding="10,16">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="{Binding BuildingDataCount}" Style="{StaticResource StatNumberLabel}" FontSize="24" TextColor="{StaticResource StatusDueSoon}" />
-                        <Label Text="Building data" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="3" Style="{StaticResource StatCardBorder}" Padding="10,16">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="{Binding ColdStartCount}" Style="{StaticResource StatNumberLabel}" FontSize="24" TextColor="{StaticResource TextMuted}" />
-                        <Label Text="Cold start" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
-
-            <Border Style="{StaticResource CardBorder}" Padding="14,10">
-                <Entry Placeholder="Search tracked items..." Text="{Binding SearchText}" Style="{StaticResource SearchEntry}" />
-            </Border>
-
-            <CollectionView ItemsSource="{Binding Items}" SelectionMode="None">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="vm:HistoryItem">
-                        <Border Style="{StaticResource CardBorder}">
-                            <VerticalStackLayout Spacing="10">
-                                <Grid ColumnDefinitions="*,Auto">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=ToggleExpandCommand}"
-                                            CommandParameter="{Binding .}" />
-                                    </Grid.GestureRecognizers>
-                                    <VerticalStackLayout Grid.Column="0" Spacing="6">
-                                        <HorizontalStackLayout Spacing="8">
-                                            <Label Text="{Binding ProductName}" Style="{StaticResource ItemNameLabel}" VerticalOptions="Center" />
-                                            <Border Style="{StaticResource PillBorder}">
-                                                <Border.Stroke>
-                                                    <SolidColorBrush Color="{Binding ConfidenceTier, Converter={StaticResource ConfidenceTierToColorConverter}}" />
-                                                </Border.Stroke>
-                                                <Label Text="{Binding ConfidenceTier}" FontSize="12" FontAttributes="Bold"
-                                                       TextColor="{Binding ConfidenceTier, Converter={StaticResource ConfidenceTierToColorConverter}}" />
-                                            </Border>
-                                        </HorizontalStackLayout>
-                                        <Label Style="{StaticResource SubtitleLabel}">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="{Binding Category}" />
-                                                    <Span Text=" · " />
-                                                    <Span Text="{Binding PurchaseCount}" />
-                                                    <Span Text=" purchases recorded" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                    </VerticalStackLayout>
-                                    <Label Grid.Column="1" Text="{Binding IsExpanded, Converter={StaticResource BoolToChevronConverter}}"
-                                           VerticalOptions="Center" TextColor="{StaticResource TextMuted}" />
-                                </Grid>
-
-                                <VerticalStackLayout Spacing="10" IsVisible="{Binding IsExpanded}">
-                                    <VerticalStackLayout Spacing="4">
-                                        <Grid ColumnDefinitions="*,Auto">
-                                            <Label Grid.Column="0" Text="Prediction confidence" Style="{StaticResource CaptionLabel}" />
-                                            <Label Grid.Column="1" Text="{Binding ConfidencePercentText}" Style="{StaticResource CaptionLabel}" />
-                                        </Grid>
-                                        <ProgressBar Progress="{Binding ConfidenceFraction}" />
-                                    </VerticalStackLayout>
-
-                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                                        <Border Grid.Column="0" Style="{StaticResource CardBorder}" BackgroundColor="{StaticResource SurfaceElevated}">
-                                            <VerticalStackLayout Spacing="2">
-                                                <Label Text="Avg interval" Style="{StaticResource CaptionLabel}" />
-                                                <Label Text="{Binding AvgIntervalText}" FontAttributes="Bold" />
-                                            </VerticalStackLayout>
-                                        </Border>
-                                        <Border Grid.Column="1" Style="{StaticResource CardBorder}" BackgroundColor="{StaticResource SurfaceElevated}">
-                                            <VerticalStackLayout Spacing="2">
-                                                <Label Text="Last purchased" Style="{StaticResource CaptionLabel}" />
-                                                <Label Text="{Binding LastPurchasedText}" FontAttributes="Bold" />
-                                            </VerticalStackLayout>
-                                        </Border>
-                                    </Grid>
-
-                                    <Border Style="{StaticResource CardBorder}" BackgroundColor="{StaticResource SurfaceElevated}">
-                                        <VerticalStackLayout Spacing="2">
-                                            <Label Text="Next predicted purchase" Style="{StaticResource CaptionLabel}" />
-                                            <Label Text="{Binding NextPredictedText}" FontAttributes="Bold" />
-                                        </VerticalStackLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="vm:HistoryItem">
+                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                    <VerticalStackLayout Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=ToggleExpandCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding ProductName}" Style="{StaticResource ItemNameLabel}" VerticalOptions="Center" />
+                                    <Border Style="{StaticResource PillBorder}">
+                                        <Border.Stroke>
+                                            <SolidColorBrush Color="{Binding ConfidenceTier, Converter={StaticResource ConfidenceTierToColorConverter}}" />
+                                        </Border.Stroke>
+                                        <Label Text="{Binding ConfidenceTier}" FontSize="12" FontAttributes="Bold"
+                                               TextColor="{Binding ConfidenceTier, Converter={StaticResource ConfidenceTierToColorConverter}}" />
                                     </Border>
-                                </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                                <Label Style="{StaticResource SubtitleLabel}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Category}" />
+                                            <Span Text=" · " />
+                                            <Span Text="{Binding PurchaseCount}" />
+                                            <Span Text=" purchases recorded" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                             </VerticalStackLayout>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                            <Label Grid.Column="1" Text="{Binding IsExpanded, Converter={StaticResource BoolToChevronConverter}}"
+                                   VerticalOptions="Center" TextColor="{StaticResource TextMuted}" />
+                        </Grid>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                        <VerticalStackLayout Spacing="10" IsVisible="{Binding IsExpanded}">
+                            <VerticalStackLayout Spacing="4">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0" Text="Prediction confidence" Style="{StaticResource CaptionLabel}" />
+                                    <Label Grid.Column="1" Text="{Binding ConfidencePercentText}" Style="{StaticResource CaptionLabel}" />
+                                </Grid>
+                                <ProgressBar Progress="{Binding ConfidenceFraction}" />
+                            </VerticalStackLayout>
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <Border Grid.Column="0" Style="{StaticResource CardBorder}" BackgroundColor="{StaticResource SurfaceElevated}">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="Avg interval" Style="{StaticResource CaptionLabel}" />
+                                        <Label Text="{Binding AvgIntervalText}" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <Border Grid.Column="1" Style="{StaticResource CardBorder}" BackgroundColor="{StaticResource SurfaceElevated}">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="Last purchased" Style="{StaticResource CaptionLabel}" />
+                                        <Label Text="{Binding LastPurchasedText}" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+
+                            <Border Style="{StaticResource CardBorder}" BackgroundColor="{StaticResource SurfaceElevated}">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Next predicted purchase" Style="{StaticResource CaptionLabel}" />
+                                    <Label Text="{Binding NextPredictedText}" FontAttributes="Bold" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
 </ContentPage>
