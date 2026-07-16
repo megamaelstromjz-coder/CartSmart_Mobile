@@ -1,6 +1,12 @@
 namespace CartSmart.Mobile.Services;
 
-public record SuggestionSignal(string ProductName, double Confidence, DateTimeOffset PredictedNeedBy);
+public record SuggestionSignal(
+    string ProductName,
+    string? Category,
+    double Confidence,
+    double AvgIntervalDays,
+    DateTimeOffset LastPurchasedAt,
+    DateTimeOffset PredictedNeedBy);
 
 /// <summary>
 /// Pluggable ranking-signal boundary (spec Section 3/7.1, Section 10.1). Phase 1's only

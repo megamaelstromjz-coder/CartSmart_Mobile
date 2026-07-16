@@ -17,6 +17,8 @@ public class PurchaseEvent
 
     public DateTimeOffset PurchasedAt { get; set; }
     public double Quantity { get; set; }
+    public string? Unit { get; set; }
+    public string? Category { get; set; }
 
     public int SchemaVersion { get; set; } = 1;
 }

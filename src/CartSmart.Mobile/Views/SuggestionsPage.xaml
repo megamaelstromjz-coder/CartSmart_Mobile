@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CartSmart.Mobile.ViewModels"
+             x:Class="CartSmart.Mobile.Views.SuggestionsPage"
+             x:DataType="vm:SuggestionsViewModel"
+             Title="Suggestions">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="✨ Smart Suggestions" Style="{StaticResource SectionTitleLabel}" />
+                <Label Text="Based on your purchase history, these items are predicted to be running low."
+                       Style="{StaticResource SubtitleLabel}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource InfoBanner}">
+                <Label Text="All predictions are calculated entirely on this device — your purchase data never leaves your phone."
+                       TextColor="{StaticResource TextPrimary}"
+                       FontSize="14" />
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <Border Grid.Column="0" Style="{StaticResource StatCardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding OverdueCount}" Style="{StaticResource StatNumberLabel}" TextColor="{StaticResource StatusOverdue}" />
+                        <Label Text="Overdue" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource StatCardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding DueSoonCount}" Style="{StaticResource StatNumberLabel}" TextColor="{StaticResource StatusDueSoon}" />
+                        <Label Text="Due soon" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource StatCardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding UpcomingCount}" Style="{StaticResource StatNumberLabel}" TextColor="{StaticResource StatusUpcoming}" />
+                        <Label Text="Upcoming" Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <HorizontalStackLayout Spacing="8">
+                <Button Text="{Binding TotalCount, StringFormat='All {0}'}"
+                        Command="{Binding SetFilterCommand}" CommandParameter="All">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource FilterTabButton}">
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding SelectedFilter}" Value="All">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource AccentTealMuted}" />
+                                    <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Text="{Binding OverdueCount, StringFormat='Overdue {0}'}"
+                        Command="{Binding SetFilterCommand}" CommandParameter="Overdue">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource FilterTabButton}">
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding SelectedFilter}" Value="Overdue">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource AccentTealMuted}" />
+                                    <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Text="{Binding DueSoonCount, StringFormat='Due soon {0}'}"
+                        Command="{Binding SetFilterCommand}" CommandParameter="Due soon">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource FilterTabButton}">
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding SelectedFilter}" Value="Due soon">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource AccentTealMuted}" />
+                                    <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Text="{Binding UpcomingCount, StringFormat='Upcoming {0}'}"
+                        Command="{Binding SetFilterCommand}" CommandParameter="Upcoming">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource FilterTabButton}">
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding SelectedFilter}" Value="Upcoming">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource AccentTealMuted}" />
+                                    <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </HorizontalStackLayout>
+
+            <CollectionView ItemsSource="{Binding Suggestions}" SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.EmptyView>
+                    <Label Text="Nothing due right now — nice work!"
+                           Style="{StaticResource SubtitleLabel}"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,24,0,0" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SuggestionItem">
+                        <Grid ColumnDefinitions="4,*" ColumnSpacing="0">
+                            <BoxView Grid.Column="0"
+                                     Color="{Binding Urgency, Converter={StaticResource UrgencyToColorConverter}}"
+                                     CornerRadius="2" />
+                            <Border Grid.Column="1" Style="{StaticResource CardBorder}" Margin="8,0,0,0">
+                                <VerticalStackLayout Spacing="8">
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="{Binding ProductName}" Style="{StaticResource ItemNameLabel}" VerticalOptions="Center" />
+                                        <Border Style="{StaticResource PillBorder}">
+                                            <Border.Stroke>
+                                                <SolidColorBrush Color="{Binding Urgency, Converter={StaticResource UrgencyToColorConverter}}" />
+                                            </Border.Stroke>
+                                            <Label Text="{Binding UrgencyText}"
+                                                   FontSize="12" FontAttributes="Bold"
+                                                   TextColor="{Binding Urgency, Converter={StaticResource UrgencyToColorConverter}}" />
+                                        </Border>
+                                    </HorizontalStackLayout>
+
+                                    <Label Style="{StaticResource SubtitleLabel}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Category}" />
+                                                <Span Text=" · " />
+                                                <Span Text="{Binding IntervalText}" />
+                                                <Span Text=" · " />
+                                                <Span Text="{Binding LastPurchasedText}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <Border Style="{StaticResource PillBorder}" HorizontalOptions="Start">
+                                        <Border.Stroke>
+                                            <SolidColorBrush Color="{Binding IsHighConfidence, Converter={StaticResource ConfidenceToColorConverter}}" />
+                                        </Border.Stroke>
+                                        <Label Text="{Binding ConfidenceText}"
+                                               FontSize="12" FontAttributes="Bold"
+                                               TextColor="{Binding IsHighConfidence, Converter={StaticResource ConfidenceToColorConverter}}" />
+                                    </Border>
+
+                                    <HorizontalStackLayout Spacing="8" HorizontalOptions="End">
+                                        <Button Text="Snooze" Style="{StaticResource GhostSmallButton}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SuggestionsViewModel}}, Path=SnoozeCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="✕" Style="{StaticResource GhostSmallButton}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SuggestionsViewModel}}, Path=DismissCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="Add to list" Style="{StaticResource PrimaryButton}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SuggestionsViewModel}}, Path=AddToListCommand}"
+                                                CommandParameter="{Binding .}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

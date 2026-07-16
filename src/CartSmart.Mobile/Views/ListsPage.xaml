@@ -7,18 +7,25 @@
              x:DataType="vm:ListsViewModel"
              Title="My Lists">
 
-    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="12">
+    <Grid RowDefinitions="Auto,*" Padding="20" RowSpacing="14">
 
-        <HorizontalStackLayout Grid.Row="0" Spacing="8">
-            <Entry Placeholder="New list name"
-                   Text="{Binding NewListName}"
-                   WidthRequest="220" />
-            <Button Text="Add" Command="{Binding CreateListCommand}" />
-        </HorizontalStackLayout>
+        <Border Grid.Row="0" Style="{StaticResource AddItemBorder}">
+            <HorizontalStackLayout Spacing="8">
+                <Label Text="+" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" FontAttributes="Bold" />
+                <Entry Placeholder="New list name"
+                       Text="{Binding NewListName}"
+                       Completed="OnNewListNameCompleted"
+                       HorizontalOptions="FillAndExpand"
+                       Style="{StaticResource SearchEntry}" />
+            </HorizontalStackLayout>
+        </Border>
 
         <CollectionView Grid.Row="1"
                          ItemsSource="{Binding Lists}"
                          SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ShoppingList">
                     <SwipeView>
@@ -30,14 +37,18 @@
                                            CommandParameter="{Binding .}" />
                             </SwipeItems>
                         </SwipeView.RightItems>
-                        <Grid Padding="12" ColumnDefinitions="*,Auto">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListsViewModel}}, Path=OpenListCommand}"
-                                    CommandParameter="{Binding .}" />
-                            </Grid.GestureRecognizers>
-                            <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" FontSize="16" />
-                        </Grid>
+                        <Border Style="{StaticResource CardBorder}">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListsViewModel}}, Path=OpenListCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                                <Label Grid.Column="0" Text="🛒" VerticalOptions="Center" FontSize="18" />
+                                <Label Grid.Column="1" Text="{Binding Name}" VerticalOptions="Center" Style="{StaticResource ItemNameLabel}" />
+                                <Label Grid.Column="2" Text="›" VerticalOptions="Center" TextColor="{StaticResource TextMuted}" FontSize="20" />
+                            </Grid>
+                        </Border>
                     </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

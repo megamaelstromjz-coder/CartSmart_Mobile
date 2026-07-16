@@ -10,6 +10,12 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:CountToBoolConverter x:Key="CountToBoolConverter" />
             <converters:CheckedToStrikethroughConverter x:Key="CheckedToStrikethroughConverter" />
+            <converters:CategoryToColorConverter x:Key="CategoryToColorConverter" />
+            <converters:ConfidenceToColorConverter x:Key="ConfidenceToColorConverter" />
+            <converters:UrgencyToColorConverter x:Key="UrgencyToColorConverter" />
+            <converters:ConfidenceTierToColorConverter x:Key="ConfidenceTierToColorConverter" />
+            <converters:QuantityUnitConverter x:Key="QuantityUnitConverter" />
+            <converters:BoolToChevronConverter x:Key="BoolToChevronConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

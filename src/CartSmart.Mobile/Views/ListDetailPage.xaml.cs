@@ -22,4 +22,9 @@ public partial class ListDetailPage : ContentPage
     {
         await _viewModel.SearchAutocompleteCommand.ExecuteAsync(null);
     }
+
+    private async void OnNewItemCompleted(object? sender, EventArgs e)
+    {
+        await _viewModel.AddItemCommand.ExecuteAsync(null);
+    }
 }

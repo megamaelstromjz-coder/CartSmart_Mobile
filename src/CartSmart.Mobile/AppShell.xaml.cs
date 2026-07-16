@@ -1,15 +1,36 @@
+using CartSmart.Mobile.ViewModels;
 using CartSmart.Mobile.Views;
 
 namespace CartSmart.Mobile;
 
 public partial class AppShell : Shell
 {
-    public AppShell()
+    private readonly AppShellViewModel _viewModel;
+
+    public AppShell(AppShellViewModel viewModel)
     {
         InitializeComponent();
+        BindingContext = _viewModel = viewModel;
 
-        // Detail/modal routes navigated to via Shell.Current.GoToAsync — not top-level tabs.
+        // Detail/modal routes navigated to via Shell.Current.GoToAsync — not top-level flyout items.
         Routing.RegisterRoute(nameof(ListDetailPage), typeof(ListDetailPage));
         Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
+
+        Navigated += OnShellNavigated;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _viewModel.RefreshCommand.ExecuteAsync(null);
+    }
+
+    private void OnShellNavigated(object? sender, ShellNavigatedEventArgs e)
+    {
+        var segments = Current.CurrentState.Location.OriginalString.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (segments.Length > 0)
+        {
+            _viewModel.CurrentRoute = segments[0];
+        }
     }
 }

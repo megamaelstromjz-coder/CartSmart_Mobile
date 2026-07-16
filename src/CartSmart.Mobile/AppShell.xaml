@@ -2,15 +2,126 @@
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:CartSmart.Mobile.Views"
-       x:Class="CartSmart.Mobile.AppShell">
+       x:Class="CartSmart.Mobile.AppShell"
+       FlyoutBehavior="Flyout"
+       BackgroundColor="{StaticResource PageBackground}"
+       ForegroundColor="{StaticResource TextPrimary}"
+       TitleColor="{StaticResource TextPrimary}"
+       DisabledColor="{StaticResource TextMuted}"
+       UnselectedColor="{StaticResource TextSecondary}"
+       FlyoutBackgroundColor="{StaticResource SidebarBackground}">
 
-    <!--
-      Section 5.1 (Onboarding/Auth) and Sections 5.3-5.6 (Suggestions, Notifications, Shopping
-      Mode, Settings/Sync) are out of scope for this pass — see Services/I*.cs stubs. Lists is
-      the only fully-implemented vertical slice (Section 5.2), so it's the app's entry point here.
-    -->
+    <Shell.FlyoutHeader>
+        <Grid Padding="20,40,20,20" ColumnDefinitions="Auto,*" BackgroundColor="{StaticResource SidebarBackground}">
+            <Label Grid.Column="0" Text="🛒" FontSize="22" VerticalOptions="Center" />
+            <Label Grid.Column="1" Text="CartSmart" FontSize="20" FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" VerticalOptions="Center" Margin="8,0,0,0" />
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.FlyoutContent>
+        <VerticalStackLayout Padding="12,4" Spacing="4" BackgroundColor="{StaticResource SidebarBackground}">
+
+            <Border>
+                <Border.Style>
+                    <Style TargetType="Border" BasedOn="{StaticResource FlyoutItemBorder}">
+                        <Style.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="ListsPage">
+                                <Setter Property="BackgroundColor" Value="{StaticResource AccentTealMuted}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="ListsPage" />
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout Spacing="10" Padding="10,10">
+                    <Label Text="📋" FontSize="16" VerticalOptions="Center" />
+                    <Label Text="My List" VerticalOptions="Center" TextColor="{StaticResource TextPrimary}" FontAttributes="Bold" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border>
+                <Border.Style>
+                    <Style TargetType="Border" BasedOn="{StaticResource FlyoutItemBorder}">
+                        <Style.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="SuggestionsPage">
+                                <Setter Property="BackgroundColor" Value="{StaticResource AccentTealMuted}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="SuggestionsPage" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" Padding="10,10">
+                    <Label Grid.Column="0" Text="✨" FontSize="16" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="Suggestions" VerticalOptions="Center" TextColor="{StaticResource TextPrimary}" Margin="10,0,0,0" />
+                    <Border Grid.Column="2" Style="{StaticResource PillBorder}" Padding="7,1"
+                            IsVisible="{Binding SuggestionCount, Converter={StaticResource CountToBoolConverter}}">
+                        <Border.Stroke>
+                            <SolidColorBrush Color="{StaticResource AccentTeal}" />
+                        </Border.Stroke>
+                        <Label Text="{Binding SuggestionCount}" FontSize="11" FontAttributes="Bold" TextColor="{StaticResource AccentTeal}" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border>
+                <Border.Style>
+                    <Style TargetType="Border" BasedOn="{StaticResource FlyoutItemBorder}">
+                        <Style.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="ShopPage">
+                                <Setter Property="BackgroundColor" Value="{StaticResource AccentTealMuted}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="ShopPage" />
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout Spacing="10" Padding="10,10">
+                    <Label Text="🛍" FontSize="16" VerticalOptions="Center" />
+                    <Label Text="Shop" VerticalOptions="Center" TextColor="{StaticResource TextPrimary}" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border>
+                <Border.Style>
+                    <Style TargetType="Border" BasedOn="{StaticResource FlyoutItemBorder}">
+                        <Style.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="HistoryPage">
+                                <Setter Property="BackgroundColor" Value="{StaticResource AccentTealMuted}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="HistoryPage" />
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout Spacing="10" Padding="10,10">
+                    <Label Text="📦" FontSize="16" VerticalOptions="Center" />
+                    <Label Text="History" VerticalOptions="Center" TextColor="{StaticResource TextPrimary}" />
+                </HorizontalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </Shell.FlyoutContent>
+
     <ShellContent Title="My Lists"
-                  ContentTemplate="{DataTemplate views:ListsPage}"
-                  Route="ListsPage" />
+                  Route="ListsPage"
+                  ContentTemplate="{DataTemplate views:ListsPage}" />
+
+    <ShellContent Title="Suggestions"
+                  Route="SuggestionsPage"
+                  ContentTemplate="{DataTemplate views:SuggestionsPage}" />
+
+    <ShellContent Title="Shop"
+                  Route="ShopPage"
+                  ContentTemplate="{DataTemplate views:ShopPage}" />
+
+    <ShellContent Title="History"
+                  Route="HistoryPage"
+                  ContentTemplate="{DataTemplate views:HistoryPage}" />
 
 </Shell>

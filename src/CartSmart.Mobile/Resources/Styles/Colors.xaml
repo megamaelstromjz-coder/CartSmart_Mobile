@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Surfaces -->
+    <Color x:Key="PageBackground">#0A0E16</Color>
+    <Color x:Key="SidebarBackground">#0D1220</Color>
+    <Color x:Key="SurfaceCard">#131926</Color>
+    <Color x:Key="SurfaceElevated">#1A2233</Color>
+    <Color x:Key="BorderSubtle">#232C3F</Color>
+    <Color x:Key="BorderStrong">#2E394F</Color>
+
+    <!-- Text -->
+    <Color x:Key="TextPrimary">#F3F6FB</Color>
+    <Color x:Key="TextSecondary">#9AA7BD</Color>
+    <Color x:Key="TextMuted">#657089</Color>
+
+    <!-- Accent -->
+    <Color x:Key="AccentTeal">#2DD4BF</Color>
+    <Color x:Key="AccentTealOn">#06201D</Color>
+    <Color x:Key="AccentTealMuted">#2F6F68</Color>
+
+    <!-- Status -->
+    <Color x:Key="StatusOverdue">#F87171</Color>
+    <Color x:Key="StatusDueSoon">#FBBF24</Color>
+    <Color x:Key="StatusUpcoming">#60A5FA</Color>
+    <Color x:Key="StatusInfo">#60A5FA</Color>
+    <Color x:Key="StatusInfoBackground">#101B3E</Color>
+
+    <Color x:Key="ConfidenceHigh">#2DD4BF</Color>
+    <Color x:Key="ConfidenceLow">#F87171</Color>
+
+    <!-- Category pill colors -->
+    <Color x:Key="CategoryDairy">#60A5FA</Color>
+    <Color x:Key="CategoryBakery">#F87171</Color>
+    <Color x:Key="CategoryProduce">#4ADE80</Color>
+    <Color x:Key="CategoryMeatSeafood">#F472B6</Color>
+    <Color x:Key="CategoryBeverages">#2DD4BF</Color>
+    <Color x:Key="CategoryHousehold">#A78BFA</Color>
+    <Color x:Key="CategoryDefault">#9AA7BD</Color>
+
+    <Color x:Key="DangerColor">#F87171</Color>
+    <Color x:Key="SuccessColor">#4ADE80</Color>
+
+</ResourceDictionary>

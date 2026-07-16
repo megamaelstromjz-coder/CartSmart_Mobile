@@ -41,6 +41,8 @@ public static class MauiProgram
         services.AddSingleton<IListRepository, ListRepository>();
         services.AddSingleton<IListItemRepository, ListItemRepository>();
         services.AddSingleton<IReferenceProductRepository, ReferenceProductRepository>();
+        services.AddSingleton<IPurchaseEventRepository, PurchaseEventRepository>();
+        services.AddSingleton<IPredictionModelStateRepository, PredictionModelStateRepository>();
     }
 
     private static void RegisterApiClients(IServiceCollection services)
@@ -69,16 +71,19 @@ public static class MauiProgram
         services.AddSingleton<IDeviceContext, DeviceContext>();
         services.AddSingleton<ISyncService, SyncService>();
         services.AddSingleton<IListService, ListService>();
-
-        // Stubs — DI wiring in place for the next pass (see Services/I*.cs).
         services.AddSingleton<IPredictionService, PredictionService>();
         services.AddSingleton<ISuggestionSignalProvider>(sp => (PredictionService)sp.GetRequiredService<IPredictionService>());
-        services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IShoppingModeService, ShoppingModeService>();
+
+        // Still a stub — FR-3.x local push notifications are out of scope for this pass.
+        services.AddSingleton<INotificationService, NotificationService>();
     }
 
     private static void RegisterViewModelsAndViews(IServiceCollection services)
     {
+        services.AddTransient<AppShellViewModel>();
+        services.AddTransient<AppShell>();
+
         services.AddTransient<ListsViewModel>();
         services.AddTransient<ListsPage>();
 
@@ -87,5 +92,14 @@ public static class MauiProgram
 
         services.AddTransient<ItemDetailViewModel>();
         services.AddTransient<ItemDetailPage>();
+
+        services.AddTransient<SuggestionsViewModel>();
+        services.AddTransient<SuggestionsPage>();
+
+        services.AddTransient<ShopViewModel>();
+        services.AddTransient<ShopPage>();
+
+        services.AddTransient<HistoryViewModel>();
+        services.AddTransient<HistoryPage>();
     }
 }

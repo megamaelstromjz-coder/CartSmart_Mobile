@@ -6,19 +6,31 @@
              x:DataType="vm:ItemDetailViewModel"
              Title="Edit Item">
 
-    <VerticalStackLayout Padding="16" Spacing="12">
-        <Label Text="Name" FontAttributes="Bold" />
-        <Entry Text="{Binding Name}" />
+    <VerticalStackLayout Padding="20" Spacing="16">
+        <Border Style="{StaticResource CardBorder}">
+            <VerticalStackLayout Spacing="14">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Name" Style="{StaticResource CaptionLabel}" />
+                    <Entry Text="{Binding Name}" />
+                </VerticalStackLayout>
 
-        <Label Text="Quantity" FontAttributes="Bold" />
-        <Entry Text="{Binding Quantity}" Keyboard="Numeric" />
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Quantity" Style="{StaticResource CaptionLabel}" />
+                    <Entry Text="{Binding Quantity}" Keyboard="Numeric" />
+                </VerticalStackLayout>
 
-        <Label Text="Unit" FontAttributes="Bold" />
-        <Entry Text="{Binding Unit}" Placeholder="e.g. lb, oz, ct" />
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Unit" Style="{StaticResource CaptionLabel}" />
+                    <Entry Text="{Binding Unit}" Placeholder="e.g. lb, oz, ct" />
+                </VerticalStackLayout>
 
-        <Label Text="Category" FontAttributes="Bold" />
-        <Entry Text="{Binding Category}" Placeholder="e.g. Produce, Dairy" />
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Category" Style="{StaticResource CaptionLabel}" />
+                    <Entry Text="{Binding Category}" Placeholder="e.g. Produce, Dairy" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Border>
 
-        <Button Text="Save" Command="{Binding SaveCommand}" Margin="0,16,0,0" />
+        <Button Text="Save" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" />
     </VerticalStackLayout>
 </ContentPage>

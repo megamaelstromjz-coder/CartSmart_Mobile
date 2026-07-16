@@ -2,8 +2,8 @@ namespace CartSmart.Mobile.Services;
 
 /// <summary>
 /// FR-3.x local "running low" push notifications (spec Section 5.4). Out of scope for this
-/// pass — stubbed so DI wiring is in place; depends on <see cref="IPredictionService"/>, which
-/// itself isn't implemented yet.
+/// pass — stubbed so DI wiring is in place. <see cref="IPredictionService"/> is implemented and
+/// could drive this, but scheduling actual local notifications is still unbuilt.
 /// </summary>
 public interface INotificationService
 {

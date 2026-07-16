@@ -2,11 +2,11 @@ using CartSmart.Mobile.ViewModels;
 
 namespace CartSmart.Mobile.Views;
 
-public partial class ListsPage : ContentPage
+public partial class SuggestionsPage : ContentPage
 {
-    private readonly ListsViewModel _viewModel;
+    private readonly SuggestionsViewModel _viewModel;
 
-    public ListsPage(ListsViewModel viewModel)
+    public SuggestionsPage(SuggestionsViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
@@ -16,10 +16,5 @@ public partial class ListsPage : ContentPage
     {
         base.OnAppearing();
         await _viewModel.LoadCommand.ExecuteAsync(null);
-    }
-
-    private async void OnNewListNameCompleted(object? sender, EventArgs e)
-    {
-        await _viewModel.CreateListCommand.ExecuteAsync(null);
     }
 }

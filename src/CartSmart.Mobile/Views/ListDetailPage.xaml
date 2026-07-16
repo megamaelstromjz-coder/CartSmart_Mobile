@@ -7,71 +7,190 @@
              x:DataType="vm:ListDetailViewModel"
              Title="{Binding ListName}">
 
-    <Grid RowDefinitions="Auto,Auto,*" Padding="16" RowSpacing="8">
+    <Grid RowDefinitions="Auto,Auto,*" Padding="20" RowSpacing="14">
 
-        <!-- FE-1.4: autocomplete text field bound to the local reference list -->
-        <HorizontalStackLayout Grid.Row="0" Spacing="8">
-            <Entry Placeholder="Add item"
-                   Text="{Binding NewItemName}"
-                   TextChanged="OnNewItemTextChanged"
-                   WidthRequest="220" />
-            <Button Text="Add" Command="{Binding AddItemCommand}" />
-        </HorizontalStackLayout>
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                <Label Text="{Binding ListName}" Style="{StaticResource PageTitleLabel}" FontSize="22" />
+                <Label Style="{StaticResource SubtitleLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding RemainingCount}" />
+                            <Span Text=" remaining · " />
+                            <Span Text="{Binding DoneCount}" />
+                            <Span Text=" done" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                <Button Text="↺ Uncheck all" Style="{StaticResource OutlineButton}"
+                        Command="{Binding UncheckAllCommand}"
+                        IsVisible="{Binding DoneCount, Converter={StaticResource CountToBoolConverter}}" />
+                <Button Text="🛍 Shop" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding StartShoppingCommand}" />
+            </HorizontalStackLayout>
+        </Grid>
 
-        <CollectionView Grid.Row="1"
-                         ItemsSource="{Binding AutocompleteSuggestions}"
-                         HeightRequest="120"
-                         IsVisible="{Binding AutocompleteSuggestions.Count, Converter={StaticResource CountToBoolConverter}}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:ReferenceProduct">
-                    <Grid Padding="8">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=PickSuggestionCommand}"
-                                CommandParameter="{Binding .}" />
-                        </Grid.GestureRecognizers>
-                        <Label Text="{Binding Name}" />
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <VerticalStackLayout Grid.Row="1" Spacing="6">
+            <Border Style="{StaticResource AddItemBorder}">
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="+" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Entry Placeholder="Add an item"
+                           Text="{Binding NewItemName}"
+                           TextChanged="OnNewItemTextChanged"
+                           Completed="OnNewItemCompleted"
+                           HorizontalOptions="FillAndExpand"
+                           Style="{StaticResource SearchEntry}" />
+                </HorizontalStackLayout>
+            </Border>
 
-        <!-- FE-1.1: list view with add/edit/delete, swipe-to-check-off -->
-        <CollectionView Grid.Row="2" ItemsSource="{Binding Items}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:ListItem">
-                    <SwipeView>
-                        <SwipeView.LeftItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Check off"
-                                           BackgroundColor="SeaGreen"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=ToggleCheckedCommand}"
-                                           CommandParameter="{Binding .}" />
-                            </SwipeItems>
-                        </SwipeView.LeftItems>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete"
-                                           BackgroundColor="IndianRed"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=DeleteItemCommand}"
-                                           CommandParameter="{Binding .}" />
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        <Grid Padding="12" ColumnDefinitions="*,Auto">
+            <CollectionView ItemsSource="{Binding AutocompleteSuggestions}"
+                             HeightRequest="120"
+                             IsVisible="{Binding AutocompleteSuggestions.Count, Converter={StaticResource CountToBoolConverter}}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ReferenceProduct">
+                        <Grid Padding="8">
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=OpenItemDetailCommand}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=PickSuggestionCommand}"
                                     CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
-                            <Label Grid.Column="0"
-                                   Text="{Binding Name}"
-                                   TextDecorations="{Binding IsChecked, Converter={StaticResource CheckedToStrikethroughConverter}}"
-                                   VerticalOptions="Center" />
-                            <Label Grid.Column="1" Text="{Binding Quantity}" VerticalOptions="Center" />
+                            <Label Text="{Binding Name}" />
                         </Grid>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Spacing="16">
+
+                <CollectionView ItemsSource="{Binding PendingGroups}" IsGrouped="True" SelectionMode="None">
+                    <CollectionView.GroupHeaderTemplate>
+                        <DataTemplate x:DataType="vm:ItemGroup">
+                            <HorizontalStackLayout Spacing="8" Margin="0,8,0,4">
+                                <Border Style="{StaticResource PillBorder}">
+                                    <Border.Stroke>
+                                        <SolidColorBrush Color="{Binding Category, Converter={StaticResource CategoryToColorConverter}}" />
+                                    </Border.Stroke>
+                                    <Label Text="{Binding Category}" FontSize="12" FontAttributes="Bold"
+                                           TextColor="{Binding Category, Converter={StaticResource CategoryToColorConverter}}" />
+                                </Border>
+                                <Label Text="{Binding Count}" Style="{StaticResource CaptionLabel}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.GroupHeaderTemplate>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ListItem">
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Delete"
+                                                   BackgroundColor="IndianRed"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=DeleteItemCommand}"
+                                                   CommandParameter="{Binding .}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=ToggleCheckedCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Grid.GestureRecognizers>
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding IsChecked, Mode=OneWay}"
+                                                  InputTransparent="True" VerticalOptions="Center" />
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                            <Label Text="{Binding Name}" Style="{StaticResource ItemNameLabel}" />
+                                            <HorizontalStackLayout Spacing="6">
+                                                <Label Style="{StaticResource CaptionLabel}">
+                                                    <Label.Text>
+                                                        <MultiBinding Converter="{StaticResource QuantityUnitConverter}">
+                                                            <Binding Path="Quantity" />
+                                                            <Binding Path="Unit" />
+                                                        </MultiBinding>
+                                                    </Label.Text>
+                                                </Label>
+                                                <Border Style="{StaticResource PillBorder}" Padding="8,1">
+                                                    <Border.Stroke>
+                                                        <SolidColorBrush Color="{Binding Category, Converter={StaticResource CategoryToColorConverter}}" />
+                                                    </Border.Stroke>
+                                                    <Label Text="{Binding Category}" FontSize="11" FontAttributes="Bold"
+                                                           TextColor="{Binding Category, Converter={StaticResource CategoryToColorConverter}}" />
+                                                </Border>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2" Text="⋯" TextColor="{StaticResource TextMuted}"
+                                               VerticalOptions="Center" FontSize="18" />
+                                    </Grid>
+                                </Border>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding DoneCount, Converter={StaticResource CountToBoolConverter}}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleCheckedSectionCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding DoneCount}" />
+                                    <Span Text=" checked items" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Grid.Column="1" Text="{Binding IsCheckedSectionExpanded, Converter={StaticResource BoolToChevronConverter}}"
+                               TextColor="{StaticResource TextMuted}" />
+                    </Grid>
+
+                    <CollectionView ItemsSource="{Binding CheckedItems}" SelectionMode="None"
+                                     IsVisible="{Binding IsCheckedSectionExpanded}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ListItem">
+                                <SwipeView>
+                                    <SwipeView.RightItems>
+                                        <SwipeItems>
+                                            <SwipeItem Text="Delete"
+                                                       BackgroundColor="IndianRed"
+                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=DeleteItemCommand}"
+                                                       CommandParameter="{Binding .}" />
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
+                                    <Border Style="{StaticResource CardBorder}" Margin="0,0,0,8" Opacity="0.6">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ListDetailViewModel}}, Path=ToggleCheckedCommand}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Grid.GestureRecognizers>
+                                            <CheckBox Grid.Column="0" IsChecked="{Binding IsChecked, Mode=OneWay}"
+                                                      InputTransparent="True" VerticalOptions="Center" />
+                                            <Label Grid.Column="1" Text="{Binding Name}"
+                                                   Style="{StaticResource ItemNameLabel}"
+                                                   TextDecorations="Strikethrough"
+                                                   TextColor="{StaticResource TextSecondary}"
+                                                   VerticalOptions="Center" />
+                                            <Label Grid.Column="2" Style="{StaticResource CaptionLabel}" VerticalOptions="Center">
+                                                <Label.Text>
+                                                    <MultiBinding Converter="{StaticResource QuantityUnitConverter}">
+                                                        <Binding Path="Quantity" />
+                                                        <Binding Path="Unit" />
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                        </Grid>
+                                    </Border>
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
     </Grid>
 </ContentPage>
