@@ -87,7 +87,7 @@ public class SyncService(
 
     public async Task DeleteListAsync(string listId)
     {
-        await CallAsync(async () => { await listApi.DeleteListAsync(listId); return true; });
+        await CallAsync(() => listApi.DeleteListAsync(listId));
     }
 
     public async Task<ListItemResponse> UpsertItemAsync(ListItemPush item)
@@ -101,7 +101,7 @@ public class SyncService(
 
     public async Task DeleteItemAsync(string listId, string itemId)
     {
-        await CallAsync(async () => { await listApi.DeleteItemAsync(listId, itemId); return true; });
+        await CallAsync(() => listApi.DeleteItemAsync(listId, itemId));
     }
 
     public async Task PushPendingChangesAsync()
@@ -293,6 +293,18 @@ public class SyncService(
         try
         {
             return await call();
+        }
+        catch (RefitApiException ex)
+        {
+            throw await ApiExceptionMapper.MapAsync(ex);
+        }
+    }
+
+    private static async Task CallAsync(Func<Task> call)
+    {
+        try
+        {
+            await call();
         }
         catch (RefitApiException ex)
         {
