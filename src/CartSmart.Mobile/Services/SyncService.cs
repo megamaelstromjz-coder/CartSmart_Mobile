@@ -298,6 +298,14 @@ public class SyncService(
         {
             throw await ApiExceptionMapper.MapAsync(ex);
         }
+        catch (HttpRequestException ex)
+        {
+            throw new NetworkException(ex.Message);
+        }
+        catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
+        {
+            throw new NetworkException("The request timed out.");
+        }
     }
 
     private static async Task CallAsync(Func<Task> call)
@@ -309,6 +317,14 @@ public class SyncService(
         catch (RefitApiException ex)
         {
             throw await ApiExceptionMapper.MapAsync(ex);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new NetworkException(ex.Message);
+        }
+        catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
+        {
+            throw new NetworkException("The request timed out.");
         }
     }
 }

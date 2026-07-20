@@ -16,3 +16,10 @@ public sealed class ValidationException(string code, string message) : ApiExcept
 
 /// <summary>Fallback for status/code combinations not otherwise mapped.</summary>
 public sealed class UnexpectedApiException(string code, string message) : ApiException(code, message);
+
+/// <summary>
+/// The request never reached the server (offline, refused, timed out, connection dropped
+/// mid-flight) — distinct from <see cref="UnexpectedApiException"/>, which means the server
+/// responded but with a status/body we don't otherwise map.
+/// </summary>
+public sealed class NetworkException(string message) : ApiException("NETWORK_ERROR", message);
